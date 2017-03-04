@@ -101,7 +101,8 @@ echo -e "
 "
 }
 
-welcome
-
+if shopt -q login_shell; then
+    welcome
+fi
 # PROFILE END
 
