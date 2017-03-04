@@ -85,6 +85,8 @@ function welcome() {
     local gpuTempF
     if [[ -f "/sys/class/thermal/thermal_zone0/temp" ]]; then
         cpuTempC=$(($(cat /sys/class/thermal/thermal_zone0/temp)/1000)) && cpuTempF=$((cpuTempC*9/5+32))
+    else
+        cpuTempC='?' && cpuTempF='?'
     fi
 
 echo -e "
