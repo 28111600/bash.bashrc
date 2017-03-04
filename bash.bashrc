@@ -87,18 +87,18 @@ function welcome() {
         cpuTempC=$(($(cat /sys/class/thermal/thermal_zone0/temp)/1000)) && cpuTempF=$((cpuTempC*9/5+32))
     fi
 
-echo "
-$(tput setaf 2)   .~~.   .~~.    $(tput setaf 2)$(date)
-$(tput setaf 2)  '. \ ' ' / .'   $(tput setaf 2)$(uname -srm)$(tput setaf 1)
-$(tput setaf 1)   .~ .~~~..~.    
-$(tput setaf 1)  : .~.'~'.~. :   $(tput setaf 7)Uptime.....: ${UPTIME} 
-$(tput setaf 1) ~ (   ) (   ) ~  $(tput setaf 7)Memory.....: $(grep MemFree /proc/meminfo | awk {'print $2'})Kb / $(grep MemTotal /proc/meminfo | awk {'print $2'})Kb
-$(tput setaf 1)( : '~'.~.'~' : ) $(tput setaf 7)Processes..: $(ps ax | wc -l | tr -d " ") / ${who} users
-$(tput setaf 1) ~ .~       ~. ~  $(tput setaf 7)IP Address.: $(ip route get 8.8.8.8 2> /dev/null | head -1 | cut -d' ' -f8)
-$(tput setaf 7)  (  $(tput setaf 4) |   | $(tput setaf 7)  )  
-$(tput setaf 7)  '~         ~'  
-$(tput setaf 7)    *--~-~--*    $(tput setaf 3) Temperature: CPU: ${cpuTempC}°C / ${cpuTempF}°F
-$(tput sgr0)"
+echo -e "
+\033[32m   .~~.   .~~.    \033[32m$(date)
+\033[32m  '. \ ' ' / .'   \033[32m$(uname -srm)\033[31m
+\033[31m   .~ .~~~..~.    
+\033[31m  : .~.'~'.~. :   \033[37mUptime.....: ${UPTIME} 
+\033[31m ~ (   ) (   ) ~  \033[37mMemory.....: $(grep MemFree /proc/meminfo | awk {'print $2'})Kb / $(grep MemTotal /proc/meminfo | awk {'print $2'})Kb
+\033[31m( : '~'.~.'~' : ) \033[37mProcesses..: $(ps ax | wc -l | tr -d " ") / ${who} users
+\033[31m ~ .~       ~. ~  \033[37mIP Address.: $(ip route get 8.8.8.8 2> /dev/null | head -1 | cut -d' ' -f8)
+\033[37m  (  \033[34m |   | \033[37m  )  
+\033[37m  '~         ~'   
+\033[37m    *--~-~--*    \033[33m Temperature: CPU: ${cpuTempC}°C / ${cpuTempF}°F
+"
 }
 
 welcome
