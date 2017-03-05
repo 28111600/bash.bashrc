@@ -67,6 +67,12 @@ fi
 # PROFILE START
 
 welcome() {
+
+
+
+	local date=$(date)
+	local uname=$(uname -srm)
+
 	local upSeconds=$(/usr/bin/cut -d. -f1 /proc/uptime)
 	local secs=$((upSeconds%60))
 	local mins=$((upSeconds/60%60))
@@ -74,7 +80,16 @@ welcome() {
 	local days=$((upSeconds/86400))
 	local uptime=$(printf "%d days, %02d:%02d:%02d" "$days" "$hours" "$mins" "$secs")
 
+
+	local memFree=$(($(grep MemFree /proc/meminfo | awk {'print $2'})/1024))
+	local memTotal=$(($(grep MemTotal /proc/meminfo | awk {'print $2'})/1024))
+
+	local processes=$(ps ax | wc -l | tr -d " ")
+
+
 	local who=$(w -h | grep  -c -E "pts|tty")
+
+	local ip=$(ip route get 8.8.8.8 2> /dev/null | head -1 | cut -d' ' -f8)
 	# calculate rough CPU and GPU temperatures:
 	local cpuTempC
 	local cpuTempF
@@ -86,19 +101,19 @@ welcome() {
 		local cpuTempC='?' && local cpuTempF='?'
 	fi
 
-	local memFree=$(($(grep MemFree /proc/meminfo | awk {'print $2'})/1024))
-	local memTotal=$(($(grep MemTotal /proc/meminfo | awk {'print $2'})/1024))
 
-	echo -e "\033[32m   .~~.   .~~.    \033[32m$(date)"
-	echo -e "\033[32m  '. \ ' ' / .'   \033[32m$(uname -srm)\033[31m"
+
+	echo -e "\033[32m   .~~.   .~~.    \033[32m$date"
+	echo -e "\033[32m  '. \ ' ' / .'   \033[32m$uname\033[31m"
 	echo -e "\033[31m   .~ .~~~..~.    "
 	echo -e "\033[31m  : .~.'~'.~. :   \033[37mUptime.....: $uptime"
 	echo -e "\033[31m ~ (   ) (   ) ~  \033[37mMemory.....: $memFree Mb / $memTotal Mb"
-	echo -e "\033[31m( : '~'.~.'~' : ) \033[37mProcesses..: $(ps ax | wc -l | tr -d " ") / $who users"
-	echo -e "\033[31m ~ .~       ~. ~  \033[37mIP Address.: $(ip route get 8.8.8.8 2> /dev/null | head -1 | cut -d' ' -f8)"
+	echo -e "\033[31m( : '~'.~.'~' : ) \033[37mProcesses..: $processes / $who users"
+	echo -e "\033[31m ~ .~       ~. ~  \033[37mIP Address.: $ip"
 	echo -e "\033[37m  (  \033[34m |   | \033[37m  )  "
 	echo -e "\033[37m  '~         ~'   "
 	echo -e "\033[37m    *--~-~--*    \033[33m Temperature: CPU: $cpuTempC°C / $cpuTempF°F"
+	echo -e ""
 }
 
 if shopt -q login_shell; then
