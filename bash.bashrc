@@ -72,7 +72,7 @@ function welcome() {
     local mins=$((upSeconds/60%60))
     local hours=$((upSeconds/3600%24))
     local days=$((upSeconds/86400))
-    local UPTIME=$(printf "%d days, %02d:%02d:%02d" "$days" "$hours" "$mins" "$secs")
+    local uptime=$(printf "%d days, %02d:%02d:%02d" "$days" "$hours" "$mins" "$secs")
 
     local who=$(w -h | grep  -c -E "pts|tty" )
 
@@ -84,22 +84,25 @@ function welcome() {
     local gpuTempC
     local gpuTempF
     if [[ -f "/sys/class/thermal/thermal_zone0/temp" ]]; then
-        cpuTempC=$(($(cat /sys/class/thermal/thermal_zone0/temp)/1000)) && cpuTempF=$((cpuTempC*9/5+32))
+        local cpuTempC=$(($(cat /sys/class/thermal/thermal_zone0/temp)/1000)) && local cpuTempF=$((cpuTempC*9/5+32))
     else
-        cpuTempC='?' && cpuTempF='?'
+        local cpuTempC='?' && local cpuTempF='?'
     fi
+
+    local memFree=$(($(grep MemFree /proc/meminfo | awk {'print $2'})/1024))
+    local memTotal=$(($(grep MemTotal /proc/meminfo | awk {'print $2'})/1024))
 
 echo -e "
 \033[32m   .~~.   .~~.    \033[32m$(date)
 \033[32m  '. \ ' ' / .'   \033[32m$(uname -srm)\033[31m
 \033[31m   .~ .~~~..~.    
-\033[31m  : .~.'~'.~. :   \033[37mUptime.....: ${UPTIME} 
-\033[31m ~ (   ) (   ) ~  \033[37mMemory.....: $(grep MemFree /proc/meminfo | awk {'print $2'})Kb / $(grep MemTotal /proc/meminfo | awk {'print $2'})Kb
-\033[31m( : '~'.~.'~' : ) \033[37mProcesses..: $(ps ax | wc -l | tr -d " ") / ${who} users
+\033[31m  : .~.'~'.~. :   \033[37mUptime.....: $uptime
+\033[31m ~ (   ) (   ) ~  \033[37mMemory.....: $memFree Mb / $memTotal Mb
+\033[31m( : '~'.~.'~' : ) \033[37mProcesses..: $(ps ax | wc -l | tr -d " ") / $who users
 \033[31m ~ .~       ~. ~  \033[37mIP Address.: $(ip route get 8.8.8.8 2> /dev/null | head -1 | cut -d' ' -f8)
 \033[37m  (  \033[34m |   | \033[37m  )  
 \033[37m  '~         ~'   
-\033[37m    *--~-~--*    \033[33m Temperature: CPU: ${cpuTempC}°C / ${cpuTempF}°F
+\033[37m    *--~-~--*    \033[33m Temperature: CPU: $cpuTempC°C / $cpuTempF°F
 "
 }
 
