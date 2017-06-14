@@ -13,9 +13,9 @@ endfunc
 "colorscheme desert 
 "colorscheme desert 
 "colorscheme elflord
-colorscheme ron
+colorscheme darkZ
 
-
+syntax on
 
 
 "set fencs=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936
@@ -53,8 +53,7 @@ if version >= 603
 	set helplang=cn
 	set encoding=utf-8
 endif
-" 设置配色方案
-colorscheme jellybeans
+
 "字体 
 "if (has("gui_running")) 
 "   set guifont=Bitstream\ Vera\ Sans\ Mono\ 10 
